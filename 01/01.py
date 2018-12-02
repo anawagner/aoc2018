@@ -1,9 +1,18 @@
-infile = open("input.txt","r")
+def main():
+    sum = 0
+    frequencies = [0]
+    repeats = False
 
-sum = 0
+    while not repeats:
+        infile = open("input.txt","r")
+        for line in infile:
+            sum += eval(line)
+            frequencies.append(sum)
+            if frequencies.count(sum) > 1:
+                print("repeats: ", sum)
+                repeats = True
+                break
+        infile.close()
 
-for line in infile:
-    sum += eval(line)
-infile.close()
-
-print(sum)
+    print("sum is: ", sum)
+main()
