@@ -58,9 +58,9 @@ def good_claim(grid, claims):
     return good_id
 
 def main():
-    filename = "subinput.txt"
-    grid_width = 51
-    grid_height = 51
+    filename = "input.txt"
+    grid_width = 1001
+    grid_height = 1001
     the_claims = get_claims(filename)
     the_grid = grid(the_claims, grid_width, grid_height)
     print("overlaps:", count_overlaps(the_grid))
