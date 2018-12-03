@@ -50,8 +50,26 @@ def print_grid(grid):
             print(col, end="")
         print('\n', end="")
 
+def good_claim(grid, claims):
+    good_id = 0
+    for claim in claims:
+        claim_id = claim[0]
+        x = claim[1]
+        y = claim[2]
+        w = claim[3]
+        h = claim[4]
+        claim_grid = []
+        for j in range(h):
+            row = y + j
+            claim_grid.append(grid[row][x:x+w])
+        if count_xs(claim_grid) == 0:
+            good_id = claim_id
+    return good_id
+
 def main():
     filename = "input.txt"
-    the_grid = (grid(get_claims(filename)))
-    print(count_xs(the_grid))
+    the_claims = get_claims(filename)
+    the_grid = grid(the_claims)
+    print("Good Claim", good_claim(the_grid,the_claims))
+    print("count", count_xs(the_grid))
 main()
