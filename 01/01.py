@@ -1,17 +1,17 @@
 def main():
     sum = 0
-    frequencies = [0]
+    frequencies = set([0])
     repeats = False
 
     while not repeats:
         infile = open("input.txt","r")
         for line in infile:
             sum += eval(line)
-            frequencies.append(sum)
-            if frequencies.count(sum) > 1:
+            if sum in frequencies:
                 print("repeats: ", sum)
                 repeats = True
                 break
+            frequencies.add(sum)
         infile.close()
 
     print("sum is: ", sum)
