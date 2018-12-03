@@ -1,13 +1,8 @@
+import re
+
 def get_rectangle(claim):
-    parts = claim.split()
-    claim_id = eval(parts[0][1:])
-    position = parts[2].split(',')
-    x = eval(position[0])
-    y = eval(position[1][:-1])
-    size = parts[3].split('x')
-    width = eval(size[0])
-    height = eval(size[1])
-    return [claim_id, x, y, width, height]
+    tuple = re.findall(r'#(\d+)\s@\s(\d+),(\d+):\s(\d+)x(\d+)',claim)
+    return tuple[0]
 
 def get_claims(filename):
     claims = []
@@ -17,31 +12,27 @@ def get_claims(filename):
     infile.close()
     return claims
 
-def count_xs(grid):
+def count_overlaps(grid):
     count = 0
     for row in grid:
-        row_count = row.count('X')
-        count += row_count
+        for sq in row:
+            if len(sq) > 1:
+                count += 1
     return count
 
-def grid(claims):
-    grid_w = 1001
-    grid_h = 1001
-    grid = [ [0 for x in range(grid_w)] for y in range(grid_h)]
+def grid(claims, grid_w, grid_h):
+    grid = [ [[] for x in range(grid_w)] for y in range(grid_h)]
     for claim in claims:
         claim_id = claim[0]
-        x = claim[1]
-        y = claim[2]
-        w = claim[3]
-        h = claim[4]
+        x = eval(claim[1])
+        y = eval(claim[2])
+        w = eval(claim[3])
+        h = eval(claim[4])
         for i in range(w):
             for j in range(h):
                 row = y + j
                 col = x + i
-                if str(grid[row][col]).isalpha() or (str(grid[row][col]).isdigit() and grid[row][col] > 0):
-                    grid[row][col] = "X"
-                else:
-                    grid[row][col] = claim_id
+                grid[row][col].append(claim_id)
     return grid
 
 def print_grid(grid):
@@ -51,25 +42,28 @@ def print_grid(grid):
         print('\n', end="")
 
 def good_claim(grid, claims):
-    good_id = 0
+    good_id = []
     for claim in claims:
         claim_id = claim[0]
-        x = claim[1]
-        y = claim[2]
-        w = claim[3]
-        h = claim[4]
+        x = eval(claim[1])
+        y = eval(claim[2])
+        w = eval(claim[3])
+        h = eval(claim[4])
         claim_grid = []
         for j in range(h):
             row = y + j
             claim_grid.append(grid[row][x:x+w])
-        if count_xs(claim_grid) == 0:
-            good_id = claim_id
+        if count_overlaps(claim_grid) == 0:
+            good_id.append(claim_id)
     return good_id
 
 def main():
-    filename = "input.txt"
+    filename = "subinput.txt"
+    grid_width = 51
+    grid_height = 51
     the_claims = get_claims(filename)
-    the_grid = grid(the_claims)
+    the_grid = grid(the_claims, grid_width, grid_height)
+    print("overlaps:", count_overlaps(the_grid))
+    #print_grid(the_grid)
     print("Good Claim", good_claim(the_grid,the_claims))
-    print("count", count_xs(the_grid))
 main()
