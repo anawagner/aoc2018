@@ -1,8 +1,8 @@
 import re
 
 def get_rectangle(claim):
-    tuple = re.findall(r'#(\d+)\s@\s(\d+),(\d+):\s(\d+)x(\d+)',claim)
-    return tuple[0]
+    rect_tuple = re.findall(r'#(\d+)\s@\s(\d+),(\d+):\s(\d+)x(\d+)',claim)
+    return tuple(eval(str) for str in rect_tuple[0])
 
 def get_claims(filename):
     claims = []
@@ -23,11 +23,7 @@ def count_overlaps(grid):
 def grid(claims, grid_w, grid_h):
     grid = [ [[] for x in range(grid_w)] for y in range(grid_h)]
     for claim in claims:
-        claim_id = claim[0]
-        x = eval(claim[1])
-        y = eval(claim[2])
-        w = eval(claim[3])
-        h = eval(claim[4])
+        (claim_id, x, y, w, h) = claim
         for i in range(w):
             for j in range(h):
                 row = y + j
@@ -44,11 +40,7 @@ def print_grid(grid):
 def good_claim(grid, claims):
     good_id = []
     for claim in claims:
-        claim_id = claim[0]
-        x = eval(claim[1])
-        y = eval(claim[2])
-        w = eval(claim[3])
-        h = eval(claim[4])
+        (claim_id, x, y, w, h) = claim
         claim_grid = []
         for j in range(h):
             row = y + j
@@ -58,9 +50,9 @@ def good_claim(grid, claims):
     return good_id
 
 def main():
-    filename = "input.txt"
-    grid_width = 1001
-    grid_height = 1001
+    filename = "subinput.txt"
+    grid_width = 51
+    grid_height = 51
     the_claims = get_claims(filename)
     the_grid = grid(the_claims, grid_width, grid_height)
     print("overlaps:", count_overlaps(the_grid))
